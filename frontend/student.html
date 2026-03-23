@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WasteWatch — Student Dashboard</title>
+  <meta name="description" content="Student dashboard for reporting campus waste and tracking complaints.">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">♻️</div>
+      <div class="logo-text">WasteWatch<div class="logo-sub">Student Portal</div></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">MENU</div>
+      <div class="nav-item" data-section="sec-profile"   data-label="My Profile">    <span class="nav-icon">👤</span> Profile</div>
+      <div class="nav-item" data-section="sec-complaint" data-label="File Complaint"> <span class="nav-icon">📸</span> Complaint</div>
+      <div class="nav-item" data-section="sec-history"   data-label="Complaint History"><span class="nav-icon">📋</span> History</div>
+      <div class="nav-item" data-section="sec-status"    data-label="Complaint Status"><span class="nav-icon">🔍</span> Track Status</div>
+      <div class="nav-item" data-section="sec-scan"      data-label="Dustbin Scan">   <span class="nav-icon">📱</span> Quick Scan</div>
+      <div class="nav-item" data-section="sec-reward"    data-label="My Rewards">     <span class="nav-icon">🏆</span> Rewards</div>
+      <div class="nav-item" data-section="sec-awareness" data-label="Awareness">      <span class="nav-icon">🌱</span> Awareness</div>
+    </nav>
+
+    <div class="sidebar-footer" id="sidebar-user"></div>
+  </aside>
+
+  <!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+  <main class="main-content">
+    <header class="topbar">
+      <h2 id="topbar-title">My Profile</h2>
+      <div class="topbar-actions">
+        <span style="font-size:.78rem;color:var(--txt-muted);">🕐 <span id="live-time"></span></span>
+        <button class="theme-toggle" title="Toggle dark mode"></button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- ── PROFILE ─────────────────────────────────────── -->
+      <section class="page-section" id="sec-profile">
+        <div class="profile-header">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar" id="profile-avatar-display">👤</div>
+            <label class="avatar-upload-badge" title="Change photo">📷
+              <input type="file" accept="image/*" id="avatar-input" style="display:none;">
+            </label>
+          </div>
+          <div class="profile-info">
+            <h3 id="prof-name">—</h3>
+            <p id="prof-email" style="margin-bottom:.4rem;"></p>
+            <div class="profile-meta">
+              <span class="profile-meta-tag" id="prof-dept">📚 —</span>
+              <span class="profile-meta-tag" id="prof-complaints">📋 — Complaints</span>
+              <span class="profile-meta-tag" id="prof-points">🏆 — pts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="gap:1.5rem;">
+          <!-- Recent Complaints -->
+          <div class="card">
+            <div class="section-title"><div class="section-title-bar"></div><h2>Recent Complaints</h2></div>
+            <div id="prof-complaint-list"><p class="text-muted">No complaints yet.</p></div>
+          </div>
+
+          <!-- Change Password -->
+          <div class="card">
+            <div class="section-title"><div class="section-title-bar"></div><h2>Change Password</h2></div>
+            <form id="chg-pass-form" novalidate style="display:flex;flex-direction:column;gap:.9rem;">
+              <div class="form-group">
+                <label class="form-label">Current Password</label>
+                <input class="form-input" type="password" id="cp-old" placeholder="Current password">
+              </div>
+              <div class="form-group">
+                <label class="form-label">New Password</label>
+                <input class="form-input" type="password" id="cp-new" placeholder="New password">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Confirm New Password</label>
+                <input class="form-input" type="password" id="cp-confirm" placeholder="Repeat new password">
+              </div>
+              <button type="submit" class="btn btn-primary">🔐 Update Password</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── FILE COMPLAINT ──────────────────────────────── -->
+      <section class="page-section" id="sec-complaint">
+        <div class="section-title"><div class="section-title-bar"></div><h2>📸 File a Complaint</h2></div>
+        <div class="card" style="max-width:680px;">
+          <form id="complaint-form" novalidate style="display:flex;flex-direction:column;gap:1.1rem;">
+
+            <div class="form-group">
+              <label class="form-label">Waste Photo</label>
+              <div class="img-upload-area" id="comp-img-area">
+                <input type="file" accept="image/*" id="comp-img-input">
+                <div id="comp-img-placeholder">
+                  <div style="font-size:2.4rem;margin-bottom:.5rem;">📷</div>
+                  <p style="font-size:.88rem;color:var(--txt-muted);">Click or drag & drop to upload waste photo</p>
+                </div>
+                <img class="img-preview" id="comp-img-preview" alt="Waste preview">
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Location</label>
+                <input class="form-input" type="text" id="comp-location" placeholder="e.g. Block A Ground Floor">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Waste Type</label>
+                <select class="form-select" id="comp-type">
+                  <option value="">Select type…</option>
+                  <option>Mixed Waste</option>
+                  <option>Food Waste</option>
+                  <option>Paper Waste</option>
+                  <option>Plastic Waste</option>
+                  <option>Electronic Waste</option>
+                  <option>Hazardous Waste</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea class="form-textarea" id="comp-desc" placeholder="Describe the waste situation…"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg">📤 Submit Complaint</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ── COMPLAINT HISTORY ───────────────────────────── -->
+      <section class="page-section" id="sec-history">
+        <div class="flex-between mb-3">
+          <div class="section-title" style="margin:0;"><div class="section-title-bar"></div><h2>Complaint History</h2></div>
+          <select class="form-select" id="hist-filter" style="width:160px;">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Location</th><th>Waste Type</th><th>Date</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="history-tbody">
+              <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--txt-muted);">No complaints found.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── COMPLAINT STATUS ────────────────────────────── -->
+      <section class="page-section" id="sec-status">
+        <div class="section-title"><div class="section-title-bar"></div><h2>🔍 Track Complaint</h2></div>
+        <div class="card" style="max-width:500px; margin-bottom:1.5rem;">
+          <div style="display:flex;gap:.7rem;">
+            <input class="form-input" id="track-input" placeholder="Enter Complaint ID (e.g. WMS-0001)">
+            <button class="btn btn-blue" id="track-btn">Search</button>
+          </div>
+        </div>
+        <div id="track-result" style="max-width:500px; display:none;" class="card">
+          <div class="flex-between mb-2">
+            <h3 id="tr-id" style="font-family:var(--font-heading);">WMS-0000</h3>
+            <span id="tr-badge"></span>
+          </div>
+          <p style="margin-bottom:1.2rem;font-size:.88rem;"><strong>Location:</strong> <span id="tr-loc">—</span> &nbsp;·&nbsp; <strong>Date:</strong> <span id="tr-date">—</span></p>
+          <div class="timeline" id="track-timeline"></div>
+        </div>
+        <div id="track-not-found" class="card" style="max-width:500px;display:none;">
+          <p class="text-muted">❌ Complaint not found. Check the ID and try again.</p>
+        </div>
+      </section>
+
+      <!-- ── QUICK SCAN ─────────────────────────────────── -->
+      <section class="page-section" id="sec-scan">
+        <div class="section-title"><div class="section-title-bar"></div><h2>📱 Quick Dustbin Scan</h2></div>
+        <div class="scan-hero mb-3">
+          <div class="scan-icon">🗑️</div>
+          <h3>Dustbin Full Alert</h3>
+          <p>Take a photo of an overflowing dustbin and submit it directly.<br>You'll earn reward points for each scan!</p>
+        </div>
+
+        <div class="card" style="max-width:600px;">
+          <form id="scan-form" novalidate style="display:flex;flex-direction:column;gap:1rem;">
+            <div class="form-group">
+              <label class="form-label">Dustbin Photo</label>
+              <div class="img-upload-area" id="scan-img-area">
+                <input type="file" accept="image/*" id="scan-img-input">
+                <div id="scan-img-placeholder">
+                  <div style="font-size:2rem;margin-bottom:.4rem;">📷</div>
+                  <p style="font-size:.85rem;color:var(--txt-muted);">Tap to take/upload dustbin photo</p>
+                </div>
+                <img class="img-preview" id="scan-img-preview" alt="Scan preview">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dustbin Location</label>
+              <input class="form-input" type="text" id="scan-location" placeholder="e.g. Canteen Entrance Gate 3">
+            </div>
+            <button type="submit" class="btn btn-amber btn-lg">🚨 Send Dustbin Alert</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ── REWARDS ─────────────────────────────────────── -->
+      <section class="page-section" id="sec-reward">
+        <div class="section-title"><div class="section-title-bar"></div><h2>🏆 My Rewards</h2></div>
+
+        <div class="stat-grid mb-3">
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-value" id="rew-total">0</div>
+            <div class="stat-label">Total Points</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📸</div>
+            <div class="stat-value" id="rew-count">0</div>
+            <div class="stat-label">Reward Activities</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><div class="section-title-bar"></div><h3>Reward History</h3></div>
+          <div id="reward-list"><p class="text-muted">No rewards yet. Submit complaints to earn points!</p></div>
+        </div>
+      </section>
+
+      <!-- ── AWARENESS ───────────────────────────────────── -->
+      <section class="page-section" id="sec-awareness">
+        <div class="section-title"><div class="section-title-bar"></div><h2>🌱 Waste Awareness</h2></div>
+
+        <div class="carousel" id="awareness-carousel">
+          <button class="carousel-btn carousel-prev" id="car-prev">‹</button>
+          <button class="carousel-btn carousel-next" id="car-next">›</button>
+          <div class="carousel-track" id="car-track">
+
+            <div class="carousel-slide">
+              <div class="awareness-slide" style="background:linear-gradient(135deg,rgba(145,208,108,.15),rgba(64,150,40,.08));">
+                <div class="awareness-icon">♻️</div>
+                <h3>Reduce, Reuse, Recycle</h3>
+                <p>The 3Rs are the foundation of sustainable waste management. Reduce consumption first, reuse items wherever possible, and recycle materials to minimize landfill waste.</p>
+                <span class="badge badge-done">SDG Goal 12</span>
+              </div>
+            </div>
+
+            <div class="carousel-slide">
+              <div class="awareness-slide" style="background:linear-gradient(135deg,rgba(76,140,228,.12),rgba(64,96,147,.08));">
+                <div class="awareness-icon">🌊</div>
+                <h3>Plastic Pollution Crisis</h3>
+                <p>Over 8 million tonnes of plastic enter our oceans each year. Switching to reusable bottles, bags, and containers can significantly reduce campus plastic waste.</p>
+                <span class="badge badge-progress">SDG Goal 14</span>
+              </div>
+            </div>
+
+            <div class="carousel-slide">
+              <div class="awareness-slide" style="background:linear-gradient(135deg,rgba(255,215,80,.15),rgba(255,163,0,.08));">
+                <div class="awareness-icon">🍎</div>
+                <h3>Food Waste Matters</h3>
+                <p>Approximately 1/3 of all food produced globally is wasted. Take only what you can eat in the cafeteria, and use the food waste bins for proper composting.</p>
+                <span class="badge badge-pending">SDG Goal 2</span>
+              </div>
+            </div>
+
+            <div class="carousel-slide">
+              <div class="awareness-slide" style="background:linear-gradient(135deg,rgba(235,76,76,.1),rgba(180,40,40,.06));">
+                <div class="awareness-icon">⚡</div>
+                <h3>E-Waste Responsibility</h3>
+                <p>Electronic waste contains hazardous materials like lead and mercury. Use designated e-waste collection points on campus to dispose of old electronics safely.</p>
+                <span class="badge badge-red">Hazardous</span>
+              </div>
+            </div>
+
+            <div class="carousel-slide">
+              <div class="awareness-slide" style="background:linear-gradient(135deg,rgba(145,208,108,.18),rgba(76,140,228,.1));">
+                <div class="awareness-icon">🏆</div>
+                <h3>Earn Rewards for Clean Campus</h3>
+                <p>Every complaint you report and every dustbin alert you submit earns you reward points. Top reporters get recognized in the campus sustainability board!</p>
+                <span class="badge badge-done">Campus Initiative</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="carousel-dots" id="car-dots"></div>
+      </section>
+
+    </div><!-- /page-content -->
+  </main>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+// ── Auth guard ─────────────────────────────────────────────────────────
+const USER = WMS.requireAuth('student');
+if (!USER) throw new Error('Unauthorized');
+renderSidebarUser(USER);
+initNav();
+
+// ── Live time ──────────────────────────────────────────────────────────
+{
+  const t = document.getElementById('live-time');
+  const tick = () => { t.textContent = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }); };
+  tick(); setInterval(tick, 60000);
+}
+
+// ── Profile section ────────────────────────────────────────────────────
+function loadProfile() {
+  const u = WMS.getUserById(USER.id);
+  document.getElementById('prof-name').textContent   = u.name;
+  document.getElementById('prof-email').textContent  = u.email;
+  document.getElementById('prof-dept').textContent   = `📚 ${u.dept}`;
+  const complaints = WMS.getComplaints({ studentId: u.id });
+  document.getElementById('prof-complaints').textContent = `📋 ${complaints.length} Complaints`;
+  document.getElementById('prof-points').textContent = `🏆 ${u.rewardPoints || 0} pts`;
+
+  // Avatar
+  const avatarEl = document.getElementById('profile-avatar-display');
+  if (u.avatar) {
+    avatarEl.innerHTML = `<img class="profile-avatar profile-avatar-img" src="${u.avatar}" alt="${u.name}">`;
+  } else {
+    avatarEl.textContent = u.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  }
+
+  // Recent complaints
+  const listEl = document.getElementById('prof-complaint-list');
+  if (!complaints.length) { listEl.innerHTML = '<p class="text-muted">No complaints yet.</p>'; return; }
+  listEl.innerHTML = complaints.slice(0,5).map(c => `
+    <div class="reward-item">
+      <div class="reward-icon">📋</div>
+      <div><div style="font-size:.87rem;font-weight:600;">${c.id}</div>
+           <div class="text-muted" style="font-size:.78rem;">${c.location}</div></div>
+      <div style="margin-left:auto;">${statusBadge(c.status)}</div>
+    </div>`).join('');
+}
+loadProfile();
+
+// Avatar upload
+document.getElementById('avatar-input').addEventListener('change', function() {
+  readImageFile(this, dataUrl => {
+    if (!dataUrl) return;
+    WMS.updateUser(USER.id, { avatar: dataUrl });
+    loadProfile();
+    renderSidebarUser(WMS.getUserById(USER.id));
+    Toast.show('Profile picture updated!');
+  });
+});
+
+// Change password
+document.getElementById('chg-pass-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const oldP = document.getElementById('cp-old').value;
+  const newP = document.getElementById('cp-new').value;
+  const con  = document.getElementById('cp-confirm').value;
+  if (!oldP || !newP || !con) { Toast.show('Please fill all fields.', 'error'); return; }
+  if (newP !== con)            { Toast.show('New passwords do not match.', 'error'); return; }
+  if (newP.length < 6)         { Toast.show('Password must be at least 6 characters.', 'warning'); return; }
+  const res = WMS.changePassword(USER.id, oldP, newP);
+  if (res.error) { Toast.show(res.error, 'error'); return; }
+  Toast.show('Password updated successfully! ✅');
+  e.target.reset();
+});
+
+// ── File Complaint ─────────────────────────────────────────────────────
+initImageUpload('comp-img-area', 'comp-img-input', 'comp-img-preview');
+
+document.getElementById('complaint-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const location = document.getElementById('comp-location').value.trim();
+  const wasteType = document.getElementById('comp-type').value;
+  const description = document.getElementById('comp-desc').value.trim();
+  const imgInput = document.getElementById('comp-img-input');
+
+  if (!location || !wasteType || !description) { Toast.show('Please fill all fields.', 'warning'); return; }
+
+  readImageFile(imgInput, photo => {
+    const comp = WMS.submitComplaint({ studentId: USER.id, location, wasteType, description, photo });
+    Toast.show(`Complaint ${comp.id} submitted! ✅`);
+    e.target.reset();
+    document.getElementById('comp-img-preview').classList.remove('show');
+    loadProfile();
+    loadHistory();
+  });
+});
+
+// ── Complaint History ──────────────────────────────────────────────────
+function loadHistory(statusFilter) {
+  const filter = { studentId: USER.id };
+  if (statusFilter) filter.status = statusFilter;
+  const complaints = WMS.getComplaints(filter);
+  const tbody = document.getElementById('history-tbody');
+  if (!complaints.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--txt-muted);">No complaints found.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = complaints.map(c => `
+    <tr>
+      <td><span style="font-weight:700;color:var(--clr-blue);">${c.id}</span></td>
+      <td>${c.location}</td>
+      <td>${c.wasteType}</td>
+      <td>${fmtDate(c.date)}</td>
+      <td>${statusBadge(c.status)}</td>
+    </tr>`).join('');
+}
+loadHistory();
+
+document.getElementById('hist-filter').addEventListener('change', function() {
+  loadHistory(this.value || undefined);
+});
+
+// ── Track Status ───────────────────────────────────────────────────────
+document.getElementById('track-btn').addEventListener('click', () => {
+  const id = document.getElementById('track-input').value.trim().toUpperCase();
+  const resEl  = document.getElementById('track-result');
+  const nfEl   = document.getElementById('track-not-found');
+  resEl.style.display = 'none';
+  nfEl.style.display  = 'none';
+
+  const c = WMS.getComplaintById(id);
+  if (!c) { nfEl.style.display = 'block'; return; }
+
+  document.getElementById('tr-id').textContent   = c.id;
+  document.getElementById('tr-badge').innerHTML  = statusBadge(c.status);
+  document.getElementById('tr-loc').textContent  = c.location;
+  document.getElementById('tr-date').textContent = fmtDate(c.date);
+
+  const steps = [
+    { label: 'Complaint Submitted', desc: `Filed on ${fmtDate(c.date)}`, done: true },
+    { label: 'Assigned to Collector', desc: 'Collector notified', done: c.status !== 'pending' },
+    { label: 'In Progress', desc: 'Collector working on it', done: c.status === 'in-progress' || c.status === 'completed' },
+    { label: 'Completed', desc: 'Area cleaned & verified', done: c.status === 'completed' }
+  ];
+
+  document.getElementById('track-timeline').innerHTML = steps.map((s, i) => `
+    <div class="timeline-item">
+      <div class="timeline-line">
+        <div class="timeline-dot ${s.done ? '' : 'inactive'}"></div>
+        ${i < steps.length-1 ? `<div class="timeline-connector"></div>` : ''}
+      </div>
+      <div class="timeline-content">
+        <h4 style="color:${s.done ? 'var(--txt-primary)' : 'var(--txt-muted)'};">${s.label}</h4>
+        <p>${s.done ? s.desc : 'Pending…'}</p>
+      </div>
+    </div>`).join('');
+
+  resEl.style.display = 'block';
+});
+
+// Enter key for track
+document.getElementById('track-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('track-btn').click();
+});
+
+// ── Quick Scan ──────────────────────────────────────────────────────────
+initImageUpload('scan-img-area', 'scan-img-input', 'scan-img-preview');
+
+document.getElementById('scan-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const loc = document.getElementById('scan-location').value.trim();
+  const imp = document.getElementById('scan-img-input');
+  if (!loc) { Toast.show('Please enter the dustbin location.', 'warning'); return; }
+
+  readImageFile(imp, photo => {
+    const comp = WMS.submitComplaint({
+      studentId: USER.id,
+      location: loc,
+      wasteType: 'Dustbin Overflow',
+      description: 'Dustbin full alert via Quick Scan.',
+      photo,
+      type: 'scan'
+    });
+    WMS.addReward(USER.id, 'Dustbin Full Alert (Scan)', 30);
+    Toast.show(`Alert sent! ${comp.id} — +30 pts earned 🏆`, 'success', 4000);
+    e.target.reset();
+    document.getElementById('scan-img-preview').classList.remove('show');
+    loadProfile();
+    loadRewards();
+  });
+});
+
+// ── Rewards ────────────────────────────────────────────────────────────
+function loadRewards() {
+  const rewards = WMS.getRewards(USER.id);
+  const u = WMS.getUserById(USER.id);
+  document.getElementById('rew-total').textContent = u.rewardPoints || 0;
+  document.getElementById('rew-count').textContent = rewards.length;
+
+  const listEl = document.getElementById('reward-list');
+  if (!rewards.length) { listEl.innerHTML = '<p class="text-muted">No rewards yet. Submit complaints to earn points!</p>'; return; }
+  listEl.innerHTML = rewards.map(r => `
+    <div class="reward-item">
+      <div class="reward-icon">🏆</div>
+      <div>
+        <div style="font-weight:600;font-size:.9rem;">${r.activity}</div>
+        <div class="text-muted" style="font-size:.78rem;">${fmtDate(r.date)}</div>
+      </div>
+      <div class="reward-pts">+${r.points} pts</div>
+    </div>`).join('');
+}
+loadRewards();
+
+// ── Awareness Carousel ─────────────────────────────────────────────────
+{
+  const track = document.getElementById('car-track');
+  const slides = track.querySelectorAll('.carousel-slide');
+  const dotsEl = document.getElementById('car-dots');
+  let current = 0;
+  let autoTimer;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(dot);
+  });
+
+  function goTo(idx) {
+    current = (idx + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dotsEl.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    resetAuto();
+  }
+
+  function resetAuto() { clearInterval(autoTimer); autoTimer = setInterval(() => goTo(current + 1), 5000); }
+  resetAuto();
+
+  document.getElementById('car-prev').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('car-next').addEventListener('click', () => goTo(current + 1));
+}
+</script>
+</body>
+</html>

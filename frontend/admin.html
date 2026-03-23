@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WasteWatch — Admin Dashboard</title>
+  <meta name="description" content="Admin dashboard for managing WasteWatch campus waste system.">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">⚙️</div>
+      <div class="logo-text">WasteWatch<div class="logo-sub">Admin Portal</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">MENU</div>
+      <div class="nav-item" data-section="sec-dashboard" data-label="Dashboard">     <span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item" data-section="sec-users"     data-label="Manage Users">  <span class="nav-icon">👥</span> Manage Users</div>
+      <div class="nav-item" data-section="sec-rewards"   data-label="Give Rewards">  <span class="nav-icon">🏆</span> Give Rewards</div>
+      <div class="nav-item" data-section="sec-profile"   data-label="My Profile">    <span class="nav-icon">🔐</span> Profile</div>
+    </nav>
+    <div class="sidebar-footer" id="sidebar-user"></div>
+  </aside>
+
+  <!-- ═══════════════════ MAIN ═══════════════════ -->
+  <main class="main-content">
+    <header class="topbar">
+      <h2 id="topbar-title">Dashboard</h2>
+      <div class="topbar-actions">
+        <span style="font-size:.78rem;color:var(--txt-muted);">🕐 <span id="live-time"></span></span>
+        <button class="theme-toggle" title="Toggle dark mode"></button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- ── DASHBOARD ───────────────────────────────────── -->
+      <section class="page-section" id="sec-dashboard">
+        <div class="stat-grid mb-3">
+          <div class="stat-card" style="border-top:3px solid var(--clr-blue);">
+            <div class="stat-icon">📋</div><div class="stat-value" id="st-total">0</div><div class="stat-label">Total Complaints</div></div>
+          <div class="stat-card" style="border-top:3px solid var(--clr-amber);">
+            <div class="stat-icon">⏳</div><div class="stat-value" id="st-pending">0</div><div class="stat-label">Pending</div></div>
+          <div class="stat-card" style="border-top:3px solid var(--clr-blue);">
+            <div class="stat-icon">🔄</div><div class="stat-value" id="st-progress">0</div><div class="stat-label">In Progress</div></div>
+          <div class="stat-card" style="border-top:3px solid var(--clr-green);">
+            <div class="stat-icon">✅</div><div class="stat-value" id="st-done">0</div><div class="stat-label">Resolved</div></div>
+          <div class="stat-card" style="border-top:3px solid var(--clr-navy);">
+            <div class="stat-icon">🎓</div><div class="stat-value" id="st-students">0</div><div class="stat-label">Students</div></div>
+          <div class="stat-card" style="border-top:3px solid var(--clr-green);">
+            <div class="stat-icon">🚛</div><div class="stat-value" id="st-collectors">0</div><div class="stat-label">Collectors</div></div>
+        </div>
+
+        <!-- All complaints table -->
+        <div class="card">
+          <div class="section-title"><div class="section-title-bar"></div><h2>All Complaints</h2></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ID</th><th>Student</th><th>Location</th><th>Type</th><th>Date</th><th>Status</th></tr></thead>
+              <tbody id="admin-complaints-tbody">
+                <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--txt-muted);">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── MANAGE USERS ──────────────────────────────────── -->
+      <section class="page-section" id="sec-users">
+        <div class="flex-between mb-3" style="flex-wrap:wrap;gap:1rem;">
+          <div class="section-title" style="margin:0;"><div class="section-title-bar"></div><h2>Manage Users</h2></div>
+          <button class="btn btn-primary" onclick="openModal('create-user-modal')">➕ Create User</button>
+        </div>
+
+        <!-- Filter -->
+        <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm role-tab" data-role="">All</button>
+          <button class="btn btn-ghost btn-sm role-tab" data-role="student">🎓 Students</button>
+          <button class="btn btn-ghost btn-sm role-tab" data-role="collector">🚛 Collectors</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Actions</th></tr></thead>
+            <tbody id="users-tbody">
+              <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--txt-muted);">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── GIVE REWARDS ──────────────────────────────────── -->
+      <section class="page-section" id="sec-rewards">
+        <div class="section-title"><div class="section-title-bar"></div><h2>🏆 Give Reward Points</h2></div>
+
+        <div class="card" style="max-width:520px; margin-bottom:2rem;">
+          <form id="reward-form" novalidate style="display:flex;flex-direction:column;gap:.9rem;">
+            <div class="form-group">
+              <label class="form-label">Select Student</label>
+              <select class="form-select" id="rew-student">
+                <option value="">Choose a student…</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Activity / Reason</label>
+              <select class="form-select" id="rew-activity">
+                <option value="Waste Photo Complaint">Waste Photo Complaint</option>
+                <option value="Dustbin Full Alert (Scan)">Dustbin Full Alert (Scan)</option>
+                <option value="Best Reporter of the Month">Best Reporter of the Month</option>
+                <option value="Campus Cleanliness Initiative">Campus Cleanliness Initiative</option>
+                <option value="Custom">Custom Activity…</option>
+              </select>
+            </div>
+            <div class="form-group" id="custom-activity-group" style="display:none;">
+              <label class="form-label">Custom Activity Name</label>
+              <input class="form-input" type="text" id="rew-custom-activity" placeholder="Describe the activity…">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Points to Award</label>
+              <input class="form-input" type="number" id="rew-points" placeholder="e.g. 50" min="1" max="500">
+            </div>
+            <button type="submit" class="btn btn-amber btn-lg">🏆 Award Points</button>
+          </form>
+        </div>
+
+        <!-- Reward history table -->
+        <div class="card">
+          <div class="section-title"><div class="section-title-bar"></div><h3>All Rewards Distributed</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Student</th><th>Name</th><th>Activity</th><th>Points</th><th>Date</th></tr></thead>
+              <tbody id="all-rewards-tbody">
+                <tr><td colspan=5 style="text-align:center;padding:1.5rem;color:var(--txt-muted);">No rewards yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── ADMIN PROFILE (DANGER ZONE) ──────────────────── -->
+      <section class="page-section" id="sec-profile">
+        <div style="max-width:580px;">
+
+          <div class="profile-header" style="margin-bottom:1.5rem;">
+            <div class="profile-avatar-wrap">
+              <div class="profile-avatar" id="profile-avatar-display">⚙️</div>
+              <label class="avatar-upload-badge" title="Change photo">📷
+                <input type="file" accept="image/*" id="avatar-input" style="display:none;">
+              </label>
+            </div>
+            <div class="profile-info">
+              <h3 id="prof-name">—</h3>
+              <p id="prof-email"></p>
+              <div class="profile-meta">
+                <span class="profile-meta-tag" style="background:rgba(235,76,76,.1);color:var(--clr-red);">🔑 Administrator</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Danger zone -->
+          <div class="danger-zone">
+            <div class="danger-header">
+              <span style="font-size:2rem;">⚠️</span>
+              <h2>Change Admin Password</h2>
+            </div>
+            <p style="margin-bottom:1.5rem;font-size:.88rem;color:var(--clr-red);opacity:.8;font-weight:500;">
+              This action changes the master admin password. Keep it secure and do not share it with anyone.
+            </p>
+            <form id="admin-pass-form" novalidate style="display:flex;flex-direction:column;gap:.9rem;">
+              <div class="form-group">
+                <label class="form-label" style="color:var(--clr-red);">Current Password</label>
+                <input class="form-input" type="password" id="ap-old" placeholder="Current admin password" style="border-color:rgba(235,76,76,.3);">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="color:var(--clr-red);">New Password</label>
+                <input class="form-input" type="password" id="ap-new" placeholder="New password (min 6 chars)" style="border-color:rgba(235,76,76,.3);">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="color:var(--clr-red);">Confirm New Password</label>
+                <input class="form-input" type="password" id="ap-confirm" placeholder="Repeat new password" style="border-color:rgba(235,76,76,.3);">
+              </div>
+              <button type="submit" class="btn btn-red btn-lg" style="box-shadow:0 4px 20px rgba(235,76,76,.35);">
+                🔐 Change Admin Password
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ── Create User Modal ────────────────────────────────────────────── -->
+<div class="modal-overlay" id="create-user-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Create New User</h3>
+      <button class="modal-close" onclick="closeModal('create-user-modal')">✕</button>
+    </div>
+    <form id="create-user-form" novalidate style="display:flex;flex-direction:column;gap:.85rem;">
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">User ID</label><input class="form-input" id="cu-id" placeholder="e.g. STU2026001" required></div>
+        <div class="form-group"><label class="form-label">Role</label>
+          <select class="form-select" id="cu-role">
+            <option value="student">🎓 Student</option>
+            <option value="collector">🚛 Collector</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="cu-name" placeholder="Full name" required></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="cu-email" placeholder="email@campus.edu" required></div>
+      <div class="form-group"><label class="form-label">Department</label><input class="form-input" id="cu-dept" placeholder="e.g. Computer Science"></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="cu-pass" placeholder="Initial password" required></div>
+      <div class="flex-between" style="gap:.7rem; margin-top:.5rem;">
+        <button type="button" class="btn btn-ghost btn-full" onclick="closeModal('create-user-modal')">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-full">Create User</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── View User Profile Modal ──────────────────────────────────────── -->
+<div class="modal-overlay" id="view-user-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>User Profile</h3>
+      <button class="modal-close" onclick="closeModal('view-user-modal')">✕</button>
+    </div>
+    <div id="view-user-content"></div>
+  </div>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+const USER = WMS.requireAuth('admin');
+if (!USER) throw new Error('Unauthorized');
+renderSidebarUser(USER);
+initNav();
+
+// Live time
+{ const t = document.getElementById('live-time'); const tick = () => { t.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}); }; tick(); setInterval(tick,60000); }
+
+// ── Dashboard ──────────────────────────────────────────────────────────
+function loadDashboard() {
+  const s = WMS.getStats();
+  document.getElementById('st-total').textContent     = s.total;
+  document.getElementById('st-pending').textContent   = s.pending;
+  document.getElementById('st-progress').textContent  = s.progress;
+  document.getElementById('st-done').textContent      = s.done;
+  document.getElementById('st-students').textContent  = s.students;
+  document.getElementById('st-collectors').textContent = s.collectors;
+
+  const complaints = WMS.getComplaints();
+  const users = WMS.getUsers();
+  const tbody = document.getElementById('admin-complaints-tbody');
+  if (!complaints.length) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--txt-muted);">No complaints yet.</td></tr>`; return; }
+  tbody.innerHTML = complaints.map(c => {
+    const u = users.find(x => x.id === c.studentId);
+    return `<tr>
+      <td><strong style="color:var(--clr-blue);">${c.id}</strong></td>
+      <td>${u ? u.name : c.studentId}</td>
+      <td>${c.location}</td>
+      <td><span style="font-size:.8rem;">${c.wasteType}</span></td>
+      <td>${fmtDate(c.date)}</td>
+      <td>${statusBadge(c.status)}</td>
+    </tr>`;
+  }).join('');
+}
+loadDashboard();
+
+// ── Manage Users ───────────────────────────────────────────────────────
+let userRoleFilter = '';
+function loadUsers(role) {
+  let users = WMS.getUsers().filter(u => u.role !== 'admin');
+  if (role) users = users.filter(u => u.role === role);
+  const tbody = document.getElementById('users-tbody');
+  if (!users.length) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--txt-muted);">No users found.</td></tr>`; return; }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td><strong>${u.id}</strong></td>
+      <td>${u.name}</td>
+      <td style="font-size:.82rem;">${u.email}</td>
+      <td><span class="badge ${u.role === 'student' ? 'badge-done' : 'badge-progress'}">${u.role === 'student' ? '🎓 Student' : '🚛 Collector'}</span></td>
+      <td style="font-size:.82rem;">${u.dept || '—'}</td>
+      <td>
+        <div style="display:flex;gap:.4rem;">
+          <button class="btn btn-ghost btn-sm" onclick="viewUser('${u.id}')">👁 View</button>
+          <button class="btn btn-red btn-sm" onclick="deleteUser('${u.id}','${u.name}')">🗑 Delete</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+loadUsers();
+
+document.querySelectorAll('.role-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.role-tab').forEach(b => { b.classList.remove('active','btn-primary'); b.classList.add('btn-ghost'); });
+    btn.classList.add('active','btn-primary'); btn.classList.remove('btn-ghost');
+    userRoleFilter = btn.dataset.role;
+    loadUsers(userRoleFilter);
+  });
+});
+
+function viewUser(id) {
+  const u = WMS.getUserById(id);
+  const complaints = WMS.getComplaints({ studentId: id });
+  const rewards = WMS.getRewards(id);
+  const initials = u.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('view-user-content').innerHTML = `
+    <div class="profile-header" style="margin-bottom:1rem;">
+      ${u.avatar
+        ? `<img style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:2px solid var(--clr-green);" src="${u.avatar}" alt="${u.name}">`
+        : `<div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--clr-green),var(--clr-navy));display:grid;place-items:center;font-size:1.5rem;font-weight:700;color:#fff;">${initials}</div>`}
+      <div>
+        <h3>${u.name}</h3>
+        <p style="font-size:.85rem;">${u.email}</p>
+        <div class="profile-meta" style="margin-top:.4rem;">
+          <span class="profile-meta-tag">${u.id}</span>
+          <span class="profile-meta-tag">${u.dept || 'No dept'}</span>
+          <span class="profile-meta-tag" style="color:var(--clr-amber);">🏆 ${u.rewardPoints || 0} pts</span>
+        </div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-value">${complaints.length}</div><div class="stat-label">Complaints</div></div>
+      <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-value">${u.rewardPoints || 0}</div><div class="stat-label">Reward Pts</div></div>
+    </div>`;
+  openModal('view-user-modal');
+}
+
+function deleteUser(id, name) {
+  if (!confirm(`Are you sure you want to delete user "${name}" (${id})? This cannot be undone.`)) return;
+  WMS.deleteUser(id);
+  Toast.show(`User ${name} deleted.`, 'warning');
+  loadUsers(userRoleFilter);
+  loadDashboard();
+}
+
+// Create User
+document.getElementById('create-user-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const id    = document.getElementById('cu-id').value.trim().toUpperCase();
+  const role  = document.getElementById('cu-role').value;
+  const name  = document.getElementById('cu-name').value.trim();
+  const email = document.getElementById('cu-email').value.trim();
+  const dept  = document.getElementById('cu-dept').value.trim();
+  const pass  = document.getElementById('cu-pass').value;
+  if (!id || !name || !email || !pass) { Toast.show('Please fill all required fields.', 'warning'); return; }
+  const res = WMS.createUser({ id, role, name, email, dept, pass });
+  if (res.error) { Toast.show(res.error, 'error'); return; }
+  Toast.show(`User ${name} created successfully! ✅`);
+  closeModal('create-user-modal');
+  e.target.reset();
+  loadUsers(userRoleFilter);
+  loadDashboard();
+  loadStudentSelect();
+});
+
+// ── Rewards ────────────────────────────────────────────────────────────
+function loadStudentSelect() {
+  const students = WMS.getUsers().filter(u => u.role === 'student');
+  const sel = document.getElementById('rew-student');
+  sel.innerHTML = '<option value="">Choose a student…</option>' +
+    students.map(s => `<option value="${s.id}">${s.name} (${s.id}) — ${s.rewardPoints || 0} pts</option>`).join('');
+}
+loadStudentSelect();
+
+function loadAllRewards() {
+  const users = WMS.getUsers();
+  const students = users.filter(u => u.role === 'student');
+  let allRewards = [];
+  students.forEach(s => { WMS.getRewards(s.id).forEach(r => allRewards.push({ ...r, userName: s.name })); });
+  allRewards.sort((a,b) => new Date(b.date) - new Date(a.date));
+  const tbody = document.getElementById('all-rewards-tbody');
+  if (!allRewards.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:1.5rem;color:var(--txt-muted);">No rewards distributed yet.</td></tr>`; return; }
+  tbody.innerHTML = allRewards.map(r => `
+    <tr>
+      <td><strong>${r.studentId}</strong></td>
+      <td>${r.userName}</td>
+      <td>${r.activity}</td>
+      <td><span class="reward-pts">+${r.points}</span></td>
+      <td>${fmtDate(r.date)}</td>
+    </tr>`).join('');
+}
+loadAllRewards();
+
+document.getElementById('rew-activity').addEventListener('change', function() {
+  document.getElementById('custom-activity-group').style.display = this.value === 'Custom' ? 'flex' : 'none';
+});
+
+document.getElementById('reward-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const studentId = document.getElementById('rew-student').value;
+  let activity    = document.getElementById('rew-activity').value;
+  if (activity === 'Custom') activity = document.getElementById('rew-custom-activity').value.trim();
+  const points    = parseInt(document.getElementById('rew-points').value);
+  if (!studentId)            { Toast.show('Please select a student.', 'warning'); return; }
+  if (!activity)             { Toast.show('Please specify an activity.', 'warning'); return; }
+  if (!points || points < 1) { Toast.show('Please enter valid points (≥ 1).', 'warning'); return; }
+
+  WMS.addReward(studentId, activity, points);
+  const u = WMS.getUserById(studentId);
+  Toast.show(`Awarded ${points} pts to ${u.name} for "${activity}" ✅`, 'success', 4000);
+  e.target.reset();
+  document.getElementById('custom-activity-group').style.display = 'none';
+  loadAllRewards();
+  loadStudentSelect();
+  loadDashboard();
+});
+
+// ── Admin Profile ──────────────────────────────────────────────────────
+function loadProfile() {
+  const u = WMS.getUserById(USER.id);
+  document.getElementById('prof-name').textContent  = u.name;
+  document.getElementById('prof-email').textContent = u.email;
+  const el = document.getElementById('profile-avatar-display');
+  if (u.avatar) el.innerHTML = `<img class="profile-avatar profile-avatar-img" src="${u.avatar}" alt="${u.name}">`;
+  else el.textContent = u.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+}
+loadProfile();
+
+document.getElementById('avatar-input').addEventListener('change', function() {
+  readImageFile(this, dataUrl => {
+    if (!dataUrl) return;
+    WMS.updateUser(USER.id, { avatar: dataUrl });
+    loadProfile(); renderSidebarUser(WMS.getUserById(USER.id));
+    Toast.show('Profile picture updated!');
+  });
+});
+
+document.getElementById('admin-pass-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const oldP = document.getElementById('ap-old').value;
+  const newP = document.getElementById('ap-new').value;
+  const con  = document.getElementById('ap-confirm').value;
+  if (!oldP || !newP || !con) { Toast.show('Please fill all fields.', 'error'); return; }
+  if (newP !== con)            { Toast.show('Passwords do not match.', 'error'); return; }
+  if (newP.length < 6)         { Toast.show('Password must be ≥ 6 characters.', 'warning'); return; }
+  const res = WMS.changePassword(USER.id, oldP, newP);
+  if (res.error) { Toast.show(res.error, 'error'); return; }
+  Toast.show('Admin password updated! 🔐', 'success');
+  e.target.reset();
+});
+</script>
+</body>
+</html>

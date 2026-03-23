@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WasteWatch — Collector Dashboard</title>
+  <meta name="description" content="Collector dashboard to manage and resolve campus waste complaints.">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🚛</div>
+      <div class="logo-text">WasteWatch<div class="logo-sub">Collector Portal</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">MENU</div>
+      <div class="nav-item" data-section="sec-dashboard"  data-label="Dashboard">       <span class="nav-icon">📊</span>Dashboard</div>
+      <div class="nav-item" data-section="sec-history"    data-label="Resolved History"> <span class="nav-icon">✅</span>History</div>
+      <div class="nav-item" data-section="sec-awareness"  data-label="Awareness">        <span class="nav-icon">🌱</span>Awareness</div>
+      <div class="nav-item" data-section="sec-profile"    data-label="My Profile">       <span class="nav-icon">👤</span>Profile</div>
+    </nav>
+    <div class="sidebar-footer" id="sidebar-user"></div>
+  </aside>
+
+  <!-- ═══════════════════ MAIN ═══════════════════ -->
+  <main class="main-content">
+    <header class="topbar">
+      <h2 id="topbar-title">Dashboard</h2>
+      <div class="topbar-actions">
+        <span style="font-size:.78rem;color:var(--txt-muted);">🕐 <span id="live-time"></span></span>
+        <button class="theme-toggle" title="Toggle dark mode"></button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- ── DASHBOARD ───────────────────────────────────── -->
+      <section class="page-section" id="sec-dashboard">
+        <div class="stat-grid mb-3">
+          <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-value" id="dash-total">0</div><div class="stat-label">Total Complaints</div></div>
+          <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-value" id="dash-pending">0</div><div class="stat-label">Pending</div></div>
+          <div class="stat-card"><div class="stat-icon">🔄</div><div class="stat-value" id="dash-progress">0</div><div class="stat-label">In Progress</div></div>
+          <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-value" id="dash-done">0</div><div class="stat-label">Completed</div></div>
+        </div>
+
+        <!-- Filter tabs -->
+        <div style="display:flex;gap:.5rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm filter-tab active" data-filter="">All Open</button>
+          <button class="btn btn-ghost btn-sm filter-tab" data-filter="pending">⏳ Pending</button>
+          <button class="btn btn-ghost btn-sm filter-tab" data-filter="in-progress">🔄 In Progress</button>
+        </div>
+
+        <div class="grid-3" id="complaint-grid" style="gap:1rem;">
+          <p class="text-muted">No complaints found.</p>
+        </div>
+      </section>
+
+      <!-- ── HISTORY ──────────────────────────────────────── -->
+      <section class="page-section" id="sec-history">
+        <div class="section-title"><div class="section-title-bar"></div><h2>✅ Resolved Complaints</h2></div>
+        <div class="stat-grid mb-3">
+          <div class="stat-card"><div class="stat-icon">🏅</div><div class="stat-value" id="hist-count">0</div><div class="stat-label">Total Resolved</div></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Location</th><th>Waste Type</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody id="history-tbody">
+              <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--txt-muted);">No resolved complaints yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── AWARENESS ────────────────────────────────────── -->
+      <section class="page-section" id="sec-awareness">
+        <div class="section-title"><div class="section-title-bar"></div><h2>🌱 Waste Management Importance</h2></div>
+        <div style="display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+
+          <div class="card card-lift" style="border-top:3px solid var(--clr-green);">
+            <div style="font-size:2.2rem;margin-bottom:.7rem;">🌍</div>
+            <h3 style="margin-bottom:.5rem;">Environmental Impact</h3>
+            <p>Proper waste collection prevents soil and water contamination. Every complaint you resolve helps protect the campus ecosystem and surrounding environment.</p>
+          </div>
+
+          <div class="card card-lift" style="border-top:3px solid var(--clr-blue);">
+            <div style="font-size:2.2rem;margin-bottom:.7rem;">🏥</div>
+            <h3 style="margin-bottom:.5rem;">Public Health Protection</h3>
+            <p>Unmanaged waste attracts pests and spreads diseases. Your timely action in waste collection directly protects the health of thousands of students and staff.</p>
+          </div>
+
+          <div class="card card-lift" style="border-top:3px solid var(--clr-amber);">
+            <div style="font-size:2.2rem;margin-bottom:.7rem;">📊</div>
+            <h3 style="margin-bottom:.5rem;">SDG Contribution</h3>
+            <p>Your work directly contributes to UN Sustainable Development Goals — clean cities (Goal 11), responsible consumption (Goal 12), and climate action (Goal 13).</p>
+          </div>
+
+          <div class="card card-lift" style="border-top:3px solid var(--clr-red);">
+            <div style="font-size:2.2rem;margin-bottom:.7rem;">⚠️</div>
+            <h3 style="margin-bottom:.5rem;">Safety First</h3>
+            <p>Always wear protective gloves and masks when handling waste. Use proper lifting techniques and never expose yourself to hazardous materials without proper gear.</p>
+          </div>
+
+          <div class="card card-lift" style="border-top:3px solid var(--clr-navy);">
+            <div style="font-size:2.2rem;margin-bottom:.7rem;">🔄</div>
+            <h3 style="margin-bottom:.5rem;">Segregation Matters</h3>
+            <p>Separate wet, dry, and hazardous waste at the point of collection. Correct segregation improves recycling efficiency and reduces processing costs by up to 40%.</p>
+          </div>
+
+          <div class="card card-lift" style="border-top:3px solid var(--clr-green);">
+            <div style="font-size:2.2rem;margin-bottom:.7rem;">🏆</div>
+            <h3 style="margin-bottom:.5rem;">Your Impact Matters</h3>
+            <p>Every complaint you resolve is a cleaner, safer campus. A clean environment improves student productivity, mental wellbeing, and campus reputation.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── PROFILE ──────────────────────────────────────── -->
+      <section class="page-section" id="sec-profile">
+        <div class="profile-header">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar" id="profile-avatar-display">🚛</div>
+            <label class="avatar-upload-badge" title="Change photo">📷
+              <input type="file" accept="image/*" id="avatar-input" style="display:none;">
+            </label>
+          </div>
+          <div class="profile-info">
+            <h3 id="prof-name">—</h3>
+            <p id="prof-email"></p>
+            <div class="profile-meta">
+              <span class="profile-meta-tag">🚛 Collector</span>
+              <span class="profile-meta-tag" id="prof-id-tag">ID: —</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="max-width:460px;">
+          <div class="section-title"><div class="section-title-bar"></div><h2>Change Password</h2></div>
+          <form id="chg-pass-form" novalidate style="display:flex;flex-direction:column;gap:.9rem;">
+            <div class="form-group"><label class="form-label">Current Password</label><input class="form-input" type="password" id="cp-old" placeholder="Current password"></div>
+            <div class="form-group"><label class="form-label">New Password</label><input class="form-input" type="password" id="cp-new" placeholder="New password"></div>
+            <div class="form-group"><label class="form-label">Confirm New Password</label><input class="form-input" type="password" id="cp-confirm" placeholder="Repeat new password"></div>
+            <button type="submit" class="btn btn-primary">🔐 Update Password</button>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ── Update Status Modal ─────────────────────────────────────────── -->
+<div class="modal-overlay" id="update-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Update Complaint Status</h3>
+      <button class="modal-close" onclick="closeModal('update-modal')">✕</button>
+    </div>
+    <p style="margin-bottom:1rem;font-size:.88rem;color:var(--txt-muted);">ID: <strong id="modal-complaint-id">—</strong></p>
+
+    <div class="form-group mb-2">
+      <label class="form-label">New Status</label>
+      <select class="form-select" id="modal-status">
+        <option value="in-progress">🔄 In Progress</option>
+        <option value="completed">✅ Completed</option>
+      </select>
+    </div>
+
+    <div class="form-group mb-3">
+      <label class="form-label">Proof Photo (required for Completed)</label>
+      <div class="img-upload-area" id="proof-img-area">
+        <input type="file" accept="image/*" id="proof-img-input">
+        <div style="font-size:1.8rem;margin-bottom:.3rem;">📷</div>
+        <p style="font-size:.82rem;color:var(--txt-muted);">Upload photo of cleared area</p>
+        <img class="img-preview" id="proof-img-preview" alt="Proof">
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-full" id="modal-submit-btn">Save Status</button>
+  </div>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+const USER = WMS.requireAuth('collector');
+if (!USER) throw new Error('Unauthorized');
+renderSidebarUser(USER);
+initNav();
+
+// Live time
+{ const t = document.getElementById('live-time'); const tick = () => { t.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}); }; tick(); setInterval(tick,60000); }
+
+// ── Load Dashboard ─────────────────────────────────────────────────────
+let activeComplaintId = null;
+
+function loadDashboard(filter) {
+  const stats = WMS.getStats();
+  document.getElementById('dash-total').textContent    = stats.total;
+  document.getElementById('dash-pending').textContent  = stats.pending;
+  document.getElementById('dash-progress').textContent = stats.progress;
+  document.getElementById('dash-done').textContent     = stats.done;
+
+  // Show open complaints (pending + in-progress)
+  let complaints = WMS.getComplaints().filter(c => c.status !== 'completed');
+  if (filter) complaints = complaints.filter(c => c.status === filter);
+
+  const grid = document.getElementById('complaint-grid');
+  if (!complaints.length) {
+    grid.innerHTML = `<div class="card" style="grid-column:1/-1;text-align:center;padding:2rem;">
+      <div style="font-size:3rem;margin-bottom:.7rem;">🎉</div>
+      <h3>All Clear!</h3><p class="text-muted">No open complaints. Great work!</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = complaints.map(c => {
+    const img = c.photo
+      ? `<img src="${c.photo}" alt="Waste" style="width:100%;height:160px;object-fit:cover;">`
+      : `<div class="complaint-img">🗑️</div>`;
+    return `
+    <div class="complaint-card">
+      ${img}
+      <div class="complaint-body">
+        <div class="complaint-id">${c.id}</div>
+        <div class="complaint-location">📍 ${c.location}</div>
+        <div class="complaint-desc">${c.description}</div>
+        <div class="flex-between" style="flex-wrap:wrap;gap:.5rem;">
+          ${statusBadge(c.status)}
+          <button class="btn btn-primary btn-sm update-btn" data-id="${c.id}">Update Status</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.update-btn').forEach(btn => {
+    btn.addEventListener('click', () => openUpdateModal(btn.dataset.id));
+  });
+}
+loadDashboard();
+
+// Filter tabs
+document.querySelectorAll('.filter-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active', 'btn-primary'));
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.add('btn-ghost'));
+    btn.classList.add('active', 'btn-primary');
+    btn.classList.remove('btn-ghost');
+    loadDashboard(btn.dataset.filter || undefined);
+  });
+});
+
+// ── History ────────────────────────────────────────────────────────────
+function loadHistory() {
+  const resolved = WMS.getComplaints({ status: 'completed' });
+  document.getElementById('hist-count').textContent = resolved.length;
+  const tbody = document.getElementById('history-tbody');
+  if (!resolved.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--txt-muted);">No resolved complaints yet.</td></tr>`; return; }
+  tbody.innerHTML = resolved.map(c => `
+    <tr>
+      <td><span style="font-weight:700;color:var(--clr-green);">${c.id}</span></td>
+      <td>${c.location}</td>
+      <td>${c.wasteType}</td>
+      <td>${fmtDate(c.date)}</td>
+      <td>${statusBadge(c.status)}</td>
+    </tr>`).join('');
+}
+loadHistory();
+
+// ── Profile ────────────────────────────────────────────────────────────
+function loadProfile() {
+  const u = WMS.getUserById(USER.id);
+  document.getElementById('prof-name').textContent   = u.name;
+  document.getElementById('prof-email').textContent  = u.email;
+  document.getElementById('prof-id-tag').textContent = `ID: ${u.id}`;
+  const avatarEl = document.getElementById('profile-avatar-display');
+  if (u.avatar) avatarEl.innerHTML = `<img class="profile-avatar profile-avatar-img" src="${u.avatar}" alt="${u.name}">`;
+  else avatarEl.textContent = u.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+}
+loadProfile();
+
+document.getElementById('avatar-input').addEventListener('change', function() {
+  readImageFile(this, dataUrl => {
+    if (!dataUrl) return;
+    WMS.updateUser(USER.id, { avatar: dataUrl });
+    loadProfile();
+    renderSidebarUser(WMS.getUserById(USER.id));
+    Toast.show('Profile picture updated!');
+  });
+});
+
+document.getElementById('chg-pass-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const oldP = document.getElementById('cp-old').value;
+  const newP = document.getElementById('cp-new').value;
+  const con  = document.getElementById('cp-confirm').value;
+  if (!oldP || !newP || !con) { Toast.show('Please fill all fields.', 'error'); return; }
+  if (newP !== con) { Toast.show('Passwords do not match.', 'error'); return; }
+  if (newP.length < 6) { Toast.show('Password must be ≥ 6 characters.', 'warning'); return; }
+  const res = WMS.changePassword(USER.id, oldP, newP);
+  if (res.error) { Toast.show(res.error, 'error'); return; }
+  Toast.show('Password updated! ✅');
+  e.target.reset();
+});
+
+// ── Update Status Modal ────────────────────────────────────────────────
+initImageUpload('proof-img-area', 'proof-img-input', 'proof-img-preview');
+
+function openUpdateModal(id) {
+  activeComplaintId = id;
+  document.getElementById('modal-complaint-id').textContent = id;
+  document.getElementById('proof-img-preview').classList.remove('show');
+  openModal('update-modal');
+}
+
+document.getElementById('modal-submit-btn').addEventListener('click', () => {
+  const status = document.getElementById('modal-status').value;
+  const imgInput = document.getElementById('proof-img-input');
+
+  if (status === 'completed' && !imgInput.files.length) {
+    Toast.show('Please upload a proof photo for completion.', 'warning'); return;
+  }
+
+  readImageFile(imgInput, photo => {
+    WMS.updateComplaintStatus(activeComplaintId, status, photo);
+    closeModal('update-modal');
+    Toast.show(`Complaint ${activeComplaintId} marked as "${status}" ✅`);
+    loadDashboard();
+    loadHistory();
+  });
+});
+</script>
+</body>
+</html>
