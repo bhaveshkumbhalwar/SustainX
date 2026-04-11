@@ -8,7 +8,7 @@
 
 **SustainX is not just a project — it's a movement.**
 
-We aim to create a world where:
+We aim to create a world where:-
 - Waste is managed intelligently  
 - Communities stay clean and healthy  
 - Technology drives sustainable living  
